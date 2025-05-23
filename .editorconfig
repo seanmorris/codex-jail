@@ -13,3 +13,11 @@ indent_style = tab
 [*.{json,yaml,yml}]
 indent_size = 2
 indent_style = space
+
+[*.sh]
+indent_style = space
+indent_size = 2
+
+[*Dockerfile]
+indent_style = space
+indent_size = 2

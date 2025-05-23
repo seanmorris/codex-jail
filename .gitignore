@@ -1,5 +1,7 @@
 # Local environment variables
 .env
+# Docker Compose override file
+docker-compose.override.yml
 
 # OS files
 .DS_Store

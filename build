@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
+echo "🔧 Building the Codex CLI Docker image..."
 docker-compose build codex

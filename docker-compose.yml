@@ -13,6 +13,7 @@ services:
     image: docker:24-dind
     container_name: dind-daemon
     privileged: true
+    restart: on-failure
     networks:
       dind-net:
         aliases:
@@ -24,10 +25,16 @@ services:
       - dind-data:/var/lib/docker
     ports:
       - "2376:2376"
+    healthcheck:
+      test: ["CMD-SHELL", "docker info > /dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 6
 
   codex:
     depends_on:
-      - dind-daemon
+      dind-daemon:
+        condition: service_healthy
     image: codex-local
     build:
       dockerfile: codex.Dockerfile
@@ -43,3 +50,6 @@ services:
       - dind-certs:/certs/client:ro
       - ~/.gitconfig:/etc/gitconfig:ro
       - ./:/app
+    restart: on-failure
+    tty: true
+    stdin_open: true

@@ -6,6 +6,7 @@ Ensures Codex can never run a command that could destroy your FS.
 
 - Docker
 - Docker Compose
+- pre-commit (optional, for local linting and Git hooks)
 
 ## Setup
 
@@ -27,6 +28,63 @@ Ensures Codex can never run a command that could destroy your FS.
    ./start
    ```
 
+- 4. (Optional) Install Git hooks for quality checks:
+
+   ```bash
+   pre-commit install
+   ```
+
+## Environment Variables
+
+The `.env.example` file lists required and optional environment variables:
+
+- `OPENAI_API_KEY` (required): Your OpenAI API key.
+- `OPENAI_ORGANIZATION` (optional): Your OpenAI organization ID.
+- `OPENAI_API_BASE` (optional): Custom API base URL (e.g., for Azure deployments).
+- `OPENAI_API_TYPE` (optional): API type when using Azure.
+- `OPENAI_API_VERSION` (optional): API version when using Azure.
+
+## Troubleshooting
+
+- If you encounter TLS errors connecting to the Docker daemon, ensure the `dind-daemon` container is healthy and certificates are properly generated.
+- For daemon logs:
+  ```bash
+  docker logs dind-daemon
+  ```
+- If build or start scripts fail, verify your environment variables and installed Docker/Compose versions.
+- For help with the Codex CLI:
+  ```bash
+  ./start --help
+  ```
+
+## Development
+
+This project includes pre-commit hooks and a CI workflow for linting and validation.
+
+1. Install pre-commit hooks:
+   ```bash
+   pre-commit install
+   pre-commit run --all-files
+   ```
+2. CI actions are defined in `.github/workflows/ci.yml`.
+
+## Configuration
+
+The following environment variables can be set in your `.env` file (copied from `.env.example`):
+
+- `OPENAI_API_KEY` (required): Your OpenAI API key.
+- `OPENAI_ORGANIZATION` (optional): Your OpenAI organization ID.
+- `OPENAI_API_BASE` (optional): The base URL for the OpenAI API.
+- `OPENAI_API_TYPE` (optional): Set to `azure` if using Azure OpenAI Service.
+- `OPENAI_API_VERSION` (optional): The API version to use (e.g., `2023-03-15-preview`).
+
+## Troubleshooting
+
+- **Build failures**: Ensure Docker and Docker Compose are installed and running.
+- **Permissions issues**: If you encounter permission errors, check that your user has access to Docker and the working directory.
+- **Environment variables**: Make sure you have copied `.env.example` to `.env` and filled in your OpenAI credentials.
+- **Docker daemon timeout**: If the Codex CLI can't connect to Docker, wait for the daemon to start or adjust the healthcheck retries in `docker-compose.yml`.
+
 ## Files
 
 - `codex.Dockerfile` — Dockerfile for building the Codex CLI container.
@@ -35,4 +93,6 @@ Ensures Codex can never run a command that could destroy your FS.
 - `start` — Script to run the Codex CLI in a container.
 - `.env.example` — Example environment variables file.
 - `.gitignore` — Git ignore rules.
-- `.dockerignore` — Docker ignore rules.
+- `.editorconfig` — EditorConfig for consistent coding styles.
+- `.pre-commit-config.yaml` — Pre-commit hook configuration (shellcheck, hadolint, markdownlint).
+- `.github/workflows/ci.yml` — CI workflow for linting and Docker Compose validation.

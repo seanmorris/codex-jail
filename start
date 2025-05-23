@@ -1,3 +1,18 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
-docker-compose run codex
+usage() {
+  cat <<EOF
+Usage: start [codex CLI args...]
+
+Starts the Codex CLI Docker container and passes any additional arguments to the codex command inside the container.
+EOF
+}
+
+if [[ "${1:-}" =~ ^(-h|--help)$ ]]; then
+  usage
+  exit 0
+fi
+
+echo "🚀 Starting Codex CLI..."
+docker-compose run --rm codex "$@"
