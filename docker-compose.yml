@@ -1,12 +1,44 @@
+version: "3.8"
+
+networks:
+  dind-net:
+    driver: bridge
+
+volumes:
+  dind-certs:
+  dind-data:
+
 services:
+  dind-daemon:
+    image: docker:24-dind
+    container_name: dind-daemon
+    privileged: true
+    networks:
+      dind-net:
+        aliases:
+          - docker
+    environment:
+      DOCKER_TLS_CERTDIR: /certs
+    volumes:
+      - dind-certs:/certs/client
+      - dind-data:/var/lib/docker
+    ports:
+      - "2376:2376"
+
   codex:
-    user: 1000:1000
+    depends_on:
+      - dind-daemon
     image: codex-local
     build:
       dockerfile: codex.Dockerfile
     env_file: .env
+    networks:
+      - dind-net
     working_dir: /app
+    environment:
+      DOCKER_HOST: tcp://docker:2376
+      DOCKER_TLS_VERIFY: "1"
+      DOCKER_CERT_PATH: /certs/client
     volumes:
+      - dind-certs:/certs/client:ro
       - ./:/app
-      - /etc/passwd:/etc/passwd:ro
-
