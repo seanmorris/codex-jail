@@ -1,0 +1,10 @@
+services:
+  codex:
+    image: codex-local
+    build:
+      dockerfile: codex.Dockerfile
+    env_file: .env
+    working_dir: /app
+    volumes:
+      - /var/run.docker.sock:/var/run/docker.sock
+      - ./:/app
