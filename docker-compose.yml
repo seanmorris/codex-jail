@@ -1,10 +1,12 @@
 services:
   codex:
+    user: 1000:1000
     image: codex-local
     build:
       dockerfile: codex.Dockerfile
     env_file: .env
     working_dir: /app
     volumes:
-      - /var/run.docker.sock:/var/run/docker.sock
       - ./:/app
+      - /etc/passwd:/etc/passwd:ro
+
