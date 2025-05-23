@@ -41,4 +41,5 @@ services:
       DOCKER_CERT_PATH: /certs/client
     volumes:
       - dind-certs:/certs/client:ro
+      - ~/.gitconfig:/etc/gitconfig:ro
       - ./:/app
