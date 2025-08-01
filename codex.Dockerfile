@@ -2,41 +2,55 @@ FROM debian:stable-20250520-slim
 
 ARG NODE_MAJOR=22
 ARG CODEX_VERSION=0.1.2505172129
-ENV DEBIAN_FRONTEND=noninteractive
+ARG GO_VERSION=1.24.2
+ENV DEBIAN_FRONTEND=noninteractive \
+    GOPATH=/root/go \
+    PATH=/root/go/bin:$PATH
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 # Install system and language dependencies, Docker CLI, and Codex CLI
-RUN apt-get update && \
+RUN apt-get update; \
     apt-get install -y --no-install-recommends \
-        ca-certificates \
-        git \
-        curl \
-        gnupg \
-    && install -m0755 -d /etc/apt/keyrings \
-    && curl -fsSL https://download.docker.com/linux/debian/gpg \
-        -o /etc/apt/keyrings/docker.asc \
-    && chmod a+r /etc/apt/keyrings/docker.asc \
-    && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] \
-        https://download.docker.com/linux/debian $(. /etc/os-release && echo $VERSION_CODENAME) stable" \
-        | tee /etc/apt/sources.list.d/docker.list > /dev/null \
-    && apt-get update && \
+      git \
+      curl \
+      gnupg \
+      ca-certificates; \
+    install -m0755 -d /etc/apt/keyrings; \
+    curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc; \
+    chmod a+r /etc/apt/keyrings/docker.asc; \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian $(. /etc/os-release && echo $VERSION_CODENAME) stable" \
+      | tee /etc/apt/sources.list.d/docker.list > /dev/null;
+
+RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         docker-ce \
         docker-ce-cli \
         containerd.io \
         docker-buildx-plugin \
-        docker-compose-plugin \
-    && curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends nodejs ripgrep fd-find bat fzf jq python3 python3-pip \
-    && ln -s /usr/bin/fdfind /usr/local/bin/fd \
-    && ln -s /usr/bin/batcat /usr/local/bin/bat \
-    && pip3 install pre-commit \
-    && npm install -g @openai/codex@${CODEX_VERSION} \
-    && git config --global safe.directory '*' \
-    && rm -rf /var/lib/apt/lists/*
+        docker-compose-plugin; \
+    curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash -;
+
+RUN apt-get update; \
+    apt-get install -y --no-install-recommends nodejs ripgrep fd-find bat fzf jq python3 python3-pip less file tar; \
+    curl -fsSL https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz | tar -C /usr/local -xz; \
+    ln -s /usr/local/go/bin/go /usr/local/bin/go; \
+    ln -s /usr/local/go/bin/gofmt /usr/local/bin/gofmt; \
+    ln -s /usr/bin/fdfind /usr/local/bin/fd; \
+    ln -s /usr/bin/batcat /usr/local/bin/bat; \
+    pip3 install pre-commit --break-system-packages; \
+    npm install -g @openai/codex@${CODEX_VERSION}; \
+    go install golang.org/x/tools/gopls@latest; \
+    go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest; \
+    git config --global safe.directory '*'; \
+    rm -rf /var/lib/apt/lists/*
+
+# Add Go workspace bin to PATH for login shells
+RUN printf 'export PATH=/root/go/bin:$PATH\n' > /etc/profile.d/gopath.sh
 
 WORKDIR /app
 
-ENTRYPOINT ["codex"]
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]

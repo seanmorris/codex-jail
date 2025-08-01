@@ -70,33 +70,32 @@ This project includes pre-commit hooks and a CI workflow for linting and validat
    ```
 2. CI actions are defined in `.github/workflows/ci.yml`.
 
-## Jirafs Container
+## Jira CLI Integration
 
-### Authentication
-Jirafs requires JIRA credentials. You can configure them via environment variables (e.g., in your `.env` file):
+Codex can manage Jira issues directly using the upstream [jira-cli](https://github.com/ankitpokhrel/jira-cli). To enable the agent to run Jira commands from within the CLI container:
 
-```
-JIRA_URL=https://your-domain.atlassian.net
-JIRA_USER=you@example.com
-JIRA_API_TOKEN=your_api_token
-```
+1. **Install `jira-cli`**  
+   Rebuild the container or install locally into your environment:
+   ```bash
+   go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest
+   ```
 
-A lightweight container for running [jirafs] (filesystem interface to Atlassian JIRA).
+2. **Configure credentials**  
+   Copy the Jira variables from `.env.example` into your `.env` so they are loaded into the Codex session, or run `jira init` inside the container to generate a `$HOME/.config/.jira/config.yml`. For example:
+   ```bash
+   JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
+   JIRA_CLOUD_USER_EMAIL=you@example.com
+   JIRA_CLOUD_API_TOKEN=your-api-token
+   ```
+   For more configuration options, see the upstream docs:
+   https://github.com/ankitpokhrel/jira-cli#configuration
 
-### Standalone build & run
-```bash
-# Build the image
-docker build -f jirafs.Dockerfile -t jirafs .
-
-# Run jirafs interactively (mount current directory as /data)
-docker run --rm -it -v "$(pwd)":/data jirafs --help
-```
-
-### Automatic FUSE mount via Compose
-```bash
-# Start jirafs and codex services; JIRA issues will be mounted under '/jira' in the Codex container
-WORK_DIR=$(pwd) docker compose up -d jirafs codex
-```
+3. **Use Jira commands**  
+   Once installed and configured, the agent or you can invoke Jira commands directly:
+   ```bash
+   jira issue list --project YOUR_PROJECT_KEY
+   jira issue view YOUR_PROJECT_KEY-123
+   ```
 
 ## Configuration
 
@@ -108,10 +107,6 @@ The following environment variables can be set in your `.env` file (copied from 
 - `OPENAI_API_TYPE` (optional): Set to `azure` if using Azure OpenAI Service.
 - `OPENAI_API_VERSION` (optional): The API version to use (e.g., `2023-03-15-preview`).
 
-### JIRA integration (for Jirafs)
-- `JIRA_URL` (required): Base URL for your JIRA instance (e.g., https://your-domain.atlassian.net).
-- `JIRA_USER` (required): Your JIRA username or email address.
-- `JIRA_API_TOKEN` (required): API token for authenticating to JIRA.
 
 ## Troubleshooting
 
@@ -123,7 +118,6 @@ The following environment variables can be set in your `.env` file (copied from 
 ## Files
 
 - `codex.Dockerfile` — Dockerfile for building the Codex CLI container.
-- `jirafs.Dockerfile` — Dockerfile for building the Jirafs CLI container.
 - `docker-compose.yml` — Docker Compose configuration.
 - `build` — Script to build the Docker image.
 - `start` — Script to run the Codex CLI in a container.

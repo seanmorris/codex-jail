@@ -3,4 +3,4 @@ set -euo pipefail
 
 WORK_DIR=$(pwd)
 echo "🔧 Building the Codex CLI Docker image..."
-WORK_DIR=${WORK_DIR} docker-compose build codex
+WORK_DIR=${WORK_DIR} docker compose build --progress=plain codex
