@@ -42,6 +42,9 @@ RUN apt-get update; \
     npm install -g @openai/codex@${CODEX_VERSION}; \
     go install golang.org/x/tools/gopls@latest; \
     go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest; \
+    # Install hadolint binary for the hadolint pre-commit hook
+    curl -fsSL https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 -o /usr/local/bin/hadolint; \
+    chmod +x /usr/local/bin/hadolint; \
     git config --global safe.directory '*'; \
     rm -rf /var/lib/apt/lists/*
 

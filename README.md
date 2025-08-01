@@ -74,13 +74,13 @@ This project includes pre-commit hooks and a CI workflow for linting and validat
 
 Codex can manage Jira issues directly using the upstream [jira-cli](https://github.com/ankitpokhrel/jira-cli). To enable the agent to run Jira commands from within the CLI container:
 
-1. **Install `jira-cli`**  
+1. **Install `jira-cli`**
    Rebuild the container or install locally into your environment:
    ```bash
    go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest
    ```
 
-2. **Configure credentials**  
+2. **Configure credentials**
    Copy the Jira variables from `.env.example` into your `.env` so they are loaded into the Codex session, or run `jira init` inside the container to generate a `$HOME/.config/.jira/config.yml`. For example:
    ```bash
    JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
@@ -90,7 +90,7 @@ Codex can manage Jira issues directly using the upstream [jira-cli](https://gith
    For more configuration options, see the upstream docs:
    https://github.com/ankitpokhrel/jira-cli#configuration
 
-3. **Use Jira commands**  
+3. **Use Jira commands**
    Once installed and configured, the agent or you can invoke Jira commands directly:
    ```bash
    jira issue list --project YOUR_PROJECT_KEY
