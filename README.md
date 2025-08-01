@@ -6,7 +6,7 @@ Ensures Codex can never run a command that could destroy your FS.
 
 - Docker
 - Docker Compose
-- pre-commit (optional, for local linting and Git hooks)
+- pre-commit (optional, for local linting and Git hooks; pre-installed inside the Codex container)
 
 ## Setup
 
@@ -61,12 +61,42 @@ The `.env.example` file lists required and optional environment variables:
 
 This project includes pre-commit hooks and a CI workflow for linting and validation.
 
+> **Note:** pre-commit is bundled in the Codex CLI container—no need to install it on your host to run linting inside the sandbox.
+
 1. Install pre-commit hooks:
    ```bash
    pre-commit install
    pre-commit run --all-files
    ```
 2. CI actions are defined in `.github/workflows/ci.yml`.
+
+## Jirafs Container
+
+### Authentication
+Jirafs requires JIRA credentials. You can configure them via environment variables (e.g., in your `.env` file):
+
+```
+JIRA_URL=https://your-domain.atlassian.net
+JIRA_USER=you@example.com
+JIRA_API_TOKEN=your_api_token
+```
+
+A lightweight container for running [jirafs] (filesystem interface to Atlassian JIRA).
+
+### Standalone build & run
+```bash
+# Build the image
+docker build -f jirafs.Dockerfile -t jirafs .
+
+# Run jirafs interactively (mount current directory as /data)
+docker run --rm -it -v "$(pwd)":/data jirafs --help
+```
+
+### Automatic FUSE mount via Compose
+```bash
+# Start jirafs and codex services; JIRA issues will be mounted under '/jira' in the Codex container
+WORK_DIR=$(pwd) docker compose up -d jirafs codex
+```
 
 ## Configuration
 
@@ -78,6 +108,11 @@ The following environment variables can be set in your `.env` file (copied from 
 - `OPENAI_API_TYPE` (optional): Set to `azure` if using Azure OpenAI Service.
 - `OPENAI_API_VERSION` (optional): The API version to use (e.g., `2023-03-15-preview`).
 
+### JIRA integration (for Jirafs)
+- `JIRA_URL` (required): Base URL for your JIRA instance (e.g., https://your-domain.atlassian.net).
+- `JIRA_USER` (required): Your JIRA username or email address.
+- `JIRA_API_TOKEN` (required): API token for authenticating to JIRA.
+
 ## Troubleshooting
 
 - **Build failures**: Ensure Docker and Docker Compose are installed and running.
@@ -88,6 +123,7 @@ The following environment variables can be set in your `.env` file (copied from 
 ## Files
 
 - `codex.Dockerfile` — Dockerfile for building the Codex CLI container.
+- `jirafs.Dockerfile` — Dockerfile for building the Jirafs CLI container.
 - `docker-compose.yml` — Docker Compose configuration.
 - `build` — Script to build the Docker image.
 - `start` — Script to run the Codex CLI in a container.

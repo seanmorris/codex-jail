@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR=$( cd -- "$( dirname -- $(readlink -f "$0") )" &> /dev/null && pwd )
+WORK_DIR=$(pwd)
+
 usage() {
   cat <<EOF
 Usage: start [codex CLI args...]
@@ -15,4 +18,4 @@ if [[ "${1:-}" =~ ^(-h|--help)$ ]]; then
 fi
 
 echo "🚀 Starting Codex CLI..."
-docker-compose run --rm codex "$@"
+WORK_DIR=${WORK_DIR} docker-compose -f ${SCRIPT_DIR}/docker-compose.yml run --rm codex "$@"

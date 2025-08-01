@@ -7,6 +7,9 @@ docker-compose.override.yml
 .DS_Store
 Thumbs.db
 
+# Jirafs FUSE mount data
+jira-data/
+
 # Editor directories and files
 .vscode/
 .idea/

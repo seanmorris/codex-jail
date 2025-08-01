@@ -1,9 +1,7 @@
 FROM debian:stable-20250520-slim
 
 ARG NODE_MAJOR=22
-ARG CODEX_VERSION=latest
-ARG USER_ID=1000
-ARG GROUP_ID=1000
+ARG CODEX_VERSION=0.1.2505172129
 ENV DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -30,19 +28,15 @@ RUN apt-get update && \
         docker-buildx-plugin \
         docker-compose-plugin \
     && curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR}.x | bash - \
-    && apt-get update && \
-    apt-get install -y --no-install-recommends nodejs \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends nodejs ripgrep fd-find bat fzf jq python3 python3-pip \
+    && ln -s /usr/bin/fdfind /usr/local/bin/fd \
+    && ln -s /usr/bin/batcat /usr/local/bin/bat \
+    && pip3 install pre-commit \
     && npm install -g @openai/codex@${CODEX_VERSION} \
     && git config --global safe.directory '*' \
-    && apt-get purge -y --auto-remove curl gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user and working directory
-RUN groupadd --gid ${GROUP_ID} codex && \
-    useradd -m --uid ${USER_ID} --gid ${GROUP_ID} codex && \
-    mkdir -p /app && chown codex:codex /app
-
-USER codex
 WORKDIR /app
 
 ENTRYPOINT ["codex"]
