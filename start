@@ -18,4 +18,9 @@ if [[ "${1:-}" =~ ^(-h|--help)$ ]]; then
 fi
 
 echo "🚀 Starting Codex CLI..."
-WORK_DIR=${WORK_DIR} docker-compose -f ${SCRIPT_DIR}/docker-compose.yml run --rm codex "$@"
+if command -v docker-compose > /dev/null 2>&1; then
+  DC="docker-compose"
+else
+  DC="docker compose"
+fi
+WORK_DIR=${WORK_DIR} ${DC} -f "${SCRIPT_DIR}/docker-compose.yml" run --rm codex "$@"
