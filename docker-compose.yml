@@ -44,10 +44,6 @@ services:
       DOCKER_HOST: tcp://docker:2376
       DOCKER_TLS_VERIFY: "1"
       DOCKER_CERT_PATH: /certs/client
-      # Pass Jira CLI credentials from .env for non-interactive auth
-      JIRA_CLOUD_ENDPOINT: ${JIRA_URL}
-      JIRA_CLOUD_USER_EMAIL: ${JIRA_USER}
-      JIRA_CLOUD_API_TOKEN: ${JIRA_API_TOKEN}
     volumes:
       - dind-certs:/certs/client:ro
       - ~/.gitconfig:/etc/gitconfig:ro

@@ -82,11 +82,14 @@ Codex can manage Jira issues directly using the upstream [jira-cli](https://gith
 
 2. **Configure credentials**
    Copy the Jira variables from `.env.example` into your `.env` so they are loaded into the Codex session, or run `jira init` inside the container to generate a `$HOME/.config/.jira/config.yml`. For example:
-   ```bash
-   JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
-   JIRA_CLOUD_USER_EMAIL=you@example.com
-   JIRA_CLOUD_API_TOKEN=your-api-token
-   ```
+```bash
+JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
+JIRA_CLOUD_USER_EMAIL=you@example.com
+JIRA_CLOUD_API_TOKEN=your-api-token
+# Optional: default project and board to avoid interactive prompts
+JIRA_CLOUD_PROJECT=YOUR_PROJECT_KEY
+JIRA_CLOUD_BOARD=YOUR_BOARD_NAME
+```
    For more configuration options, see the upstream docs:
    https://github.com/ankitpokhrel/jira-cli#configuration
 

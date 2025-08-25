@@ -8,15 +8,18 @@
 
 ## Setup
 
-Ensure `jira-cli` is installed and credentials are configured (via `.env` or `jira init`):
+Ensure `jira-cli` is installed and credentials and defaults are configured (via `.env` or `jira init`):
 ```bash
 # install jira-cli
 go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest
 
-# configure credentials (example)
+# configure credentials and defaults (example)
 JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
 JIRA_CLOUD_USER_EMAIL=you@example.com
 JIRA_CLOUD_API_TOKEN=your-api-token
+# Optional: default project and board (to skip interactive prompts)
+JIRA_CLOUD_PROJECT=YOUR_PROJECT_KEY
+JIRA_CLOUD_BOARD=YOUR_BOARD_NAME
 ```
 
 ## Projects
