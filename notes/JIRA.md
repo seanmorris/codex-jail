@@ -16,7 +16,7 @@ go install github.com/ankitpokhrel/jira-cli/cmd/jira@latest
 # configure credentials and defaults (example)
 JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
 JIRA_CLOUD_USER_EMAIL=you@example.com
-JIRA_CLOUD_API_TOKEN=your-api-token
+JIRA_API_TOKEN=your-api-token
 # Optional: default project and board (to skip interactive prompts)
 JIRA_CLOUD_PROJECT=YOUR_PROJECT_KEY
 JIRA_CLOUD_BOARD=YOUR_BOARD_NAME

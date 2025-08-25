@@ -85,10 +85,9 @@ Codex can manage Jira issues directly using the upstream [jira-cli](https://gith
 ```bash
 JIRA_CLOUD_ENDPOINT=https://your-domain.atlassian.net
 JIRA_CLOUD_USER_EMAIL=you@example.com
-JIRA_CLOUD_API_TOKEN=your-api-token
-# Optional: default project and board to avoid interactive prompts
 JIRA_CLOUD_PROJECT=YOUR_PROJECT_KEY
 JIRA_CLOUD_BOARD=YOUR_BOARD_NAME
+JIRA_API_TOKEN=your-api-token
 ```
    For more configuration options, see the upstream docs:
    https://github.com/ankitpokhrel/jira-cli#configuration

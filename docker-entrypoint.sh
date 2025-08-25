@@ -5,16 +5,16 @@ set -eux
 # Parse the first argument for dispatching
 first_arg=${1:-}
 
-# Auto-generate Jira CLI config when invoking codex or jira (or no args)
+# Normalize Jira token env var and auto-generate config when invoking codex or jira (or no args)
 if [ -z "$first_arg" ] || [ "$first_arg" = "codex" ] || [ "$first_arg" = "jira" ]; then
 {
-	if [ ! -f "$HOME/.config/.jira/.config.yml" ] && \
-		[ -n "${JIRA_API_TOKEN:-}" ] && \
-		[ -n "${JIRA_CLOUD_PROJECT:-}" ] && \
-		[ -n "${JIRA_CLOUD_BOARD:-}" ] && \
-		[ -n "${JIRA_CLOUD_ENDPOINT:-}" ] && \
-		[ -n "${JIRA_CLOUD_USER_EMAIL:-}" ] ; then
-	{
+    if [ ! -f "$HOME/.config/.jira/.config.yml" ] && \
+        [ -n "${JIRA_API_TOKEN:-}" ] && \
+        [ -n "${JIRA_CLOUD_PROJECT:-}" ] && \
+        [ -n "${JIRA_CLOUD_BOARD:-}" ] && \
+        [ -n "${JIRA_CLOUD_ENDPOINT:-}" ] && \
+        [ -n "${JIRA_CLOUD_USER_EMAIL:-}" ] ; then
+    {
 		jira init --help
 		jira init --installation cloud \
 			--project "${JIRA_CLOUD_PROJECT}" \
