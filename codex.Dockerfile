@@ -81,6 +81,7 @@ RUN printf "export PATH=/root/go/bin:\$PATH\n" > /etc/profile.d/gopath.sh
 WORKDIR /app
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+COPY notes /notes
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
