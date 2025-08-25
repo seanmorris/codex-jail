@@ -43,6 +43,7 @@ The `.env.example` file lists required and optional environment variables:
 - `OPENAI_API_BASE` (optional): Custom API base URL (e.g., for Azure deployments).
 - `OPENAI_API_TYPE` (optional): API type when using Azure.
 - `OPENAI_API_VERSION` (optional): API version when using Azure.
+- `DIND_PORT_RANGE` (optional): Range of host ports to forward to nested Docker (dind-daemon) for exposing web servers (e.g. `8000-9000`).
 
 ## Troubleshooting
 
