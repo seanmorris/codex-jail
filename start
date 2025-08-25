@@ -4,6 +4,12 @@ set -euo pipefail
 SCRIPT_DIR=$( cd -- "$( dirname -- $(readlink -f "$0") )" &> /dev/null && pwd )
 WORK_DIR=$(pwd)
 
+LOCAL_ENV=
+# Load .env from current working directory if present
+if [[ -f "${WORK_DIR}/.env" ]]; then
+  LOCAL_ENV="${WORK_DIR}/.env"
+fi
+
 usage() {
   cat <<EOF
 Usage: start [codex CLI args...]
@@ -23,4 +29,4 @@ if command -v docker-compose > /dev/null 2>&1; then
 else
   DC="docker compose"
 fi
-WORK_DIR=${WORK_DIR} ${DC} -f "${SCRIPT_DIR}/docker-compose.yml" run --rm codex "$@"
+WORK_DIR=${WORK_DIR} LOCAL_ENV=${LOCAL_ENV} ${DC} -f "${SCRIPT_DIR}/docker-compose.yml" run --rm codex "$@"

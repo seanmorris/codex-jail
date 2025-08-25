@@ -28,6 +28,8 @@ Ensures Codex can never run a command that could destroy your FS.
    ./start
    ```
 
+> **Note:** If a `.env` file is present in your current directory when running `./start`, its variables will be loaded into the Codex CLI container.
+
 - 4. (Optional) Install Git hooks for quality checks:
 
    ```bash

@@ -26,6 +26,7 @@ services:
     volumes:
       - dind-certs:/certs/client
       - dind-data:/var/lib/docker
+      - ${WORK_DIR}:/app
     healthcheck:
       test: ["CMD-SHELL", "docker info > /dev/null 2>&1"]
       interval: 10s
@@ -39,7 +40,9 @@ services:
     image: codex-local
     build:
       dockerfile: codex.Dockerfile
-    env_file: .env
+    env_file:
+      - .env
+      - ${LOCAL_ENV:-.env}
     networks:
       - dind-net
     working_dir: /app
