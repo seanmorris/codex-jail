@@ -13,7 +13,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 # Install system and language dependencies, Docker CLI, and Codex CLI
-# hadolint ignore=SC2086
+# hadolint ignore=SC2086,DL3008
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
       git \
@@ -27,6 +27,7 @@ RUN apt-get update; \
       | tee /etc/apt/sources.list.d/docker.list > /dev/null; \
     rm -rf /var/lib/apt/lists/*
 
+# hadolint ignore=DL3008
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         docker-ce \
@@ -37,6 +38,7 @@ RUN apt-get update; \
     curl -fsSL "https://deb.nodesource.com/setup_${NODE_MAJOR}.x" | bash -; \
     rm -rf /var/lib/apt/lists/*
 
+# hadolint ignore=DL3008
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
         nodejs \
@@ -49,7 +51,15 @@ RUN apt-get update; \
         python3-pip \
         less \
         file \
-        tar; \
+        tar \
+        php \
+        php-cli \
+        composer \
+        shellcheck \
+        ruby-full \
+        bundler \
+        perl \
+        cpanminus; \
     curl -fsSL "https://go.dev/dl/go${GO_VERSION}.linux-amd64.tar.gz" | tar -C /usr/local -xz; \
     ln -s /usr/local/go/bin/go /usr/local/bin/go; \
     ln -s /usr/local/go/bin/gofmt /usr/local/bin/gofmt; \
